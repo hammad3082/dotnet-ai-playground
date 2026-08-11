@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/01-TextSummarizer/01-TextSummarizer.csproj" />
+  </Folder>
+</Solution>
