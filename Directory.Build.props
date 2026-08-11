@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Shared UserSecretsId across all sub-projects in src/ -->
+    <UserSecretsId>dotnet-ai-playground-shared-secrets-99</UserSecretsId>
+  </PropertyGroup>
+</Project>

@@ -16,4 +16,11 @@
     <PackageReference Include="OpenAI" Version="2.13.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="benefits.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
 </Project>
