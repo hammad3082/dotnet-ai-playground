@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/01-TextSummarizer/01-TextSummarizer.csproj" />
+    <Project Path="src/02-ChatApp/02-ChatApp.csproj" />
   </Folder>
 </Solution>
