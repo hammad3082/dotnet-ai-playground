@@ -39,8 +39,6 @@ IChatClient client = new OpenAIClient(
 //IChatClient client = new Client(apiKey: key)
 //    .AsIChatClient(model);
 
-
-
 //------ direct open AI model
 //IChatClient client =
 //    new OpenAIClient(key).GetChatClient(model).AsIChatClient();

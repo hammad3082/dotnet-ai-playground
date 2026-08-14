@@ -3,5 +3,6 @@
     <Project Path="src/01-TextSummarizer/01-TextSummarizer.csproj" />
     <Project Path="src/02-ChatApp/02-ChatApp.csproj" />
     <Project Path="src/03-StructuredOutput/03-StructuredOutput.csproj" />
+    <Project Path="src/04-FunctionCalling/04-FunctionCalling.csproj" />
   </Folder>
 </Solution>
