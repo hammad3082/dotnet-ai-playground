@@ -5,5 +5,6 @@
     <Project Path="src/03-StructuredOutput/03-StructuredOutput.csproj" />
     <Project Path="src/04-FunctionCalling/04-FunctionCalling.csproj" />
     <Project Path="src/05-TextToImageAI/05-TextToImageAI.csproj" />
+    <Project Path="src/06-AIAssistant/06-AIAssistant.csproj" />
   </Folder>
 </Solution>

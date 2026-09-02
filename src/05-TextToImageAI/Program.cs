@@ -11,8 +11,14 @@ IConfigurationRoot config = new ConfigurationBuilder()
 
 string? hfToken = config["HuggingFaceApiKey"];
 
-
 string modelId = "black-forest-labs/FLUX.1-schnell";
+
+string prompt = "A wide cinematic shot of a colossal, sprawling orbital space station hovering in deep space. " +
+                "Titanium hulls and glowing interior docking bays show massive cargo spacecraft moored to docking arms. " +
+                "Intricate exterior gantry cranes, solar array grids, and navigation lights illuminate the metallic surfaces. " +
+                "The background features the vivid blue curve of a planet catching sunlight, harsh directional studio lighting, " +
+                "deep space shadows, shot on an IMAX 70mm lens with extreme depth and detail.";
+
 
 using var client = new HttpClient();
 
@@ -21,7 +27,7 @@ request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", hfToken)
 
 var requestBody = new
 {
-    prompt = "Astronaut riding a horse in a tropical jungle",
+    prompt,
     model = "black-forest-labs/FLUX.1-schnell",
     n = 1,
     size = "1024x1024"
@@ -29,7 +35,6 @@ var requestBody = new
 
 request.Content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
 
-// 2. Send the request
 HttpResponseMessage response = await client.SendAsync(request);
 
 if (response.IsSuccessStatusCode)
@@ -43,14 +48,14 @@ if (response.IsSuccessStatusCode)
     if (dataElement.TryGetProperty("b64_json", out var b64Element))
     {
         byte[] imageBytes = Convert.FromBase64String(b64Element.GetString()!);
-        await File.WriteAllBytesAsync("astronaut_dotnet.png", imageBytes);
-        Console.WriteLine("Success! Image saved to astronaut_dotnet.png");
+        await File.WriteAllBytesAsync("space_station_csharp.png", imageBytes);
+        Console.WriteLine("Success! Image saved to space_station_csharp.png");
     }
     else if (dataElement.TryGetProperty("url", out var urlElement))
     {
         byte[] imageBytes = await client.GetByteArrayAsync(urlElement.GetString()!);
-        await File.WriteAllBytesAsync("astronaut_dotnet.png", imageBytes);
-        Console.WriteLine("Success! Image downloaded and saved to astronaut_dotnet.png");
+        await File.WriteAllBytesAsync("space_station_csharp.png", imageBytes);
+        Console.WriteLine("Success! Image downloaded and saved to space_station_csharp.png");
     }
 }
 else
@@ -58,6 +63,44 @@ else
     string error = await response.Content.ReadAsStringAsync();
     Console.WriteLine($"API Error ({response.StatusCode}): {error}");
 }
+
+
+//var requestBody = new
+//{
+//    inputs = prompt,
+//    model = modelId,
+//    n = 1,
+//    size = "1024x1024"
+//};
+
+//string json = JsonSerializer.Serialize(requestBody);
+//var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+//string requestUrl = "https://router.huggingface.co/nscale/v1/images/generations";
+
+//// Send request to Hugging Face Serverless Inference API
+//HttpResponseMessage response = await client.PostAsync(requestUrl, content);
+
+//if (response.IsSuccessStatusCode)
+//{
+//    string responseJson = await response.Content.ReadAsStringAsync();
+//    using var doc = JsonDocument.Parse(responseJson);
+
+//    // The endpoint returns JSON structured as: { "data": [ { "b64_json": "..." } ] }
+//    var dataElement = doc.RootElement.GetProperty("data")[0];
+
+//    if (dataElement.TryGetProperty("b64_json", out var b64Element))
+//    {
+//        byte[] imageBytes = Convert.FromBase64String(b64Element.GetString()!);
+//        await File.WriteAllBytesAsync("space_station_csharp.png", imageBytes);
+//        Console.WriteLine("Saved image to space_station_csharp.png!");
+//    }
+//}
+//else
+//{
+//    string error = await response.Content.ReadAsStringAsync();
+//    Console.WriteLine($"Error ({response.StatusCode}): {error}");
+//}
 
 //string? model = "imagen-4-fast-generate";
 //string? model = "imagen-4.0-generate-001";
