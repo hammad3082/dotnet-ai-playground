@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.VectorData;
 using Microsoft.ML.Tokenizers;
 using Microsoft.SemanticKernel.Connectors.SqliteVec;
+using System.Text;
 
 IConfigurationRoot config = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
@@ -106,9 +107,39 @@ while (true)
     }
 
     Console.WriteLine("Searching...\n");
-    await foreach (VectorSearchResult<Dictionary<string, object?>> result in
-        collection.SearchAsync(searchValue, top: 1))
+    //await foreach (VectorSearchResult<Dictionary<string, object?>> result in
+    //    collection.SearchAsync(searchValue, top: 1))
+    //{
+    //    Console.WriteLine($"Score: {result.Score}\n\tContent: {result.Record["content"]}");
+    //}
+
+    var searchResults = collection.SearchAsync(searchValue, top: 4);
+
+    var contextBuilder = new StringBuilder();
+
+    await foreach (var result in searchResults)
     {
-        Console.WriteLine($"Score: {result.Score}\n\tContent: {result.Record["content"]}");
+        if (contextBuilder.Length == 0 || result.Score < 0.20)
+        {
+            string chunkText = result.Record["content"]?.ToString() ?? string.Empty;
+            contextBuilder.AppendLine(chunkText);
+            contextBuilder.AppendLine("---");
+        }
     }
+
+    string retrievedContext = contextBuilder.ToString();
+
+    var messages = new List<ChatMessage>
+    {
+        new ChatMessage(ChatRole.System, "Answer questions strictly using the provided context. If unknown, say 'I don't know'."),
+        new ChatMessage(ChatRole.User, $"""
+            Context:
+            {retrievedContext}
+
+            Question: {searchValue}
+        """)
+    };
+
+    ChatResponse response = await chatClient.GetResponseAsync(messages);
+    Console.WriteLine($"Answer:\n{response.Text}");
 }
